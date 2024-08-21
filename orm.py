@@ -82,6 +82,25 @@ class Sale(Base):
         return f'{self.id}: {self.price}'
 
 
+def get_shops(session, publisher_info):
+    qr = session.query(
+        Book.title,
+        Shop.name,
+        Sale.price,
+        Sale.date_sale
+    ).join(Stock, Stock.id_book == Book.id)\
+    .join(Shop, Shop.id == Stock.id_shop)\
+    .join(Sale, Stock.id == Sale.id_stock)\
+    .join(Publisher, Publisher.id == Book.id_publisher)\
+
+    if publisher_info.isdigit():
+        result = qr.filter(Publisher.id == int(publisher_info)).all()
+    else:
+        result = qr.filter(Publisher.name == publisher_info).all()
+    for title, shop_name, price, date in result:
+        print(f'{title: <40} | {shop_name: <10} | {price: <8} | {date.strftime('%d-%m-%Y')}')
+
+
 def main():
     engine = sq.create_engine('postgresql://postgres:root@localhost:5432/netology_db')
     Base.metadata.drop_all(bind=engine)
@@ -133,24 +152,10 @@ def main():
     session.add(sale4)
     session.commit()
 
-    zp = input('Введите имя или идентификатор издателя:')
-    qr = session.query(
-        Book.title,
-        Shop.name,
-        Sale.price,
-        Sale.date_sale
-    ).join(Stock, Stock.id_book == Book.id)\
-    .join(Shop, Shop.id == Stock.id_shop)\
-    .join(Sale, Stock.id == Sale.id_stock)\
-    .join(Publisher, Publisher.id == Book.id_publisher)\
-    .filter(Publisher.name == zp).all()
-
-    for title, shop_name, price, date in qr:
-        formatted_date = date.strftime('%d-%m-%Y')
-        print(f'{title} | {shop_name} | {price} | {formatted_date}')
+    publisher_info = input('Введите имя или идентификатор издателя:')
+    get_shops(session, publisher_info)
 
     session.close()
-
 
 if __name__ == '__main__':
     main()
