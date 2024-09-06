@@ -6,9 +6,9 @@ import time
 import re
 from selenium.webdriver.chrome.options import Options
 
-# Путь к вашему драйверу
+# Путь к драйверу
 driver_path = "C:/chromedriver-win64/chromedriver.exe"
-# Словарь с ссылками на товары и соответствующими ценами и названиями
+# Словарь с ссылками на товары
 products = {
     "https://www.g2a.com/adobe-acrobat-pro-dc-2019-pc-1-device-lifetime-adobe-key-global-i10000502609001": {
         "price": 2.45,
@@ -16,11 +16,11 @@ products = {
     },
     "https://www.g2a.com/aida64-extreme-key-global-i10000049796001": {"price": 2.43, "name": "AIDA64 Extreme"},
 }
-my_nick = "Giftcardsellery"  # Укажите ваш ник
-telegram_token = "7396669176:AAHq4f-ncs0CoR0f2-t4lq8kP9OshL7ibzM"  # Замените на ваш токен
-chat_ids = ["333161917", "315745444"]  # Замените на ваш Telegram ID
+my_nick = "Giftcardsellery"
+telegram_token = "7396669176:AAHq4f-ncs0CoR0f2-t4lq8kP9OshL7ibzM"  #
+chat_ids = ["333161917", "315745444"]
 
-# Словарь для отслеживания уже отправленных уведомлений
+# Словарь для отслеживания
 sent_notifications = {}
 
 def is_price(text):
